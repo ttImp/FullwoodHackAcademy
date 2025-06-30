@@ -1,16 +1,64 @@
+Of course. Here is the updated `README.md` with a new "Getting Started" section that explains how to clone the repository and run the Python script.
+
+### **Updated `README.md`**
+
+````markdown
 # Welcome to the Fullwood Hackademy 2025!
 
 Today, we'll be learning about web application security in a hands-on ethical hacking exercise. Our goal is to understand how login forms work and how they can be tested for common vulnerabilities like weak passwords.
 
 **Golden Rule:** The skills you learn here should only **ever** be used on systems you have explicit, written permission to test. Today, we have permission to test our live target: `https://fullwoodhackademy2025.pro/`.
 
+---
+
+### **Getting Started: Setup Instructions**
+
+Before we begin, you need to get the necessary files onto your computer and make sure Python is ready to go.
+
+#### 1. Cloning the Repository
+
+First, you need to download all the project files from GitHub. This is called "cloning".
+
+* Open your terminal or command prompt.
+* Run the following command to clone the repository. This will create a new folder called `FullwoodHackAcademy` on your computer.
+
+    ```bash
+    git clone [https://github.com/ttImp/FullwoodHackAcademy](https://github.com/ttImp/FullwoodHackAcademy)
+    ```
+
+* Now, navigate into the new directory you just created:
+
+    ```bash
+    cd FullwoodHackAcademy
+    ```
+
+You should now see all the project files (`README.md`, `brute_force_attack.py`, etc.) if you type `ls` (on Mac/Linux) or `dir` (on Windows).
+
+#### 2. Basic Python Commands
+
+Our attack script is written in Python. To run it, you'll need Python installed on your computer.
+
+* **Install Dependencies:** Our script needs the `requests` library to send web traffic. You can install it using `pip`, Python's package manager. Run this command:
+
+    ```bash
+    pip install requests
+    ```
+
+* **Run the Script:** To run the main attack script, you will use the `python` command followed by the filename. We will be doing this in each step of the exercise.
+
+    ```bash
+    python brute_force_attack.py
+    ```
+
+Now you're all set up and ready to start the mission!
+
+---
+
 ## Our Mission
 
 Our mission is to gain access to a user's account on the live website. We will start by performing reconnaissance to find a target user and then build up a Python script to "brute-force" their password, trying many combinations until we find the right one.
 
 Let's begin!
-
----
 
 ### **Step 1: Reconnaissance - Finding a Target**
 
@@ -86,3 +134,4 @@ To make our attack less obvious and look like traffic from different real browse
 ## **Mission Accomplished!**
 
 You've completed a full ethical hacking workflow against a live target: reconnaissance, initial access attempts, and password cracking. The principles you learned today are the foundation of professional penetration testing. Always remember to act ethically and responsibly.
+````
