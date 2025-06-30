@@ -65,6 +65,7 @@ Before launching an attack, we need to gather information about our target. This
 2.  Explore the website. Find the "About Us" page.
 3.  Look at the employee profiles. Can you guess what their usernames might be? (Hint: Companies often use the first name as a username).
 4.  **Choose one person to be your target.** Remember their likely username for the next steps.
+5.  Try to login to the account using the name you have chosen, can you learn anything about the how the username must be structured? 
 
 ---
 
