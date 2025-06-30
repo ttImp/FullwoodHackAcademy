@@ -19,7 +19,7 @@ First, you need to download all the project files from GitHub. This is called "c
 * Run the following command to clone the repository. This will create a new folder called `FullwoodHackAcademy` on your computer.
 
     ```bash
-    git clone [https://github.com/ttImp/FullwoodHackAcademy](https://github.com/ttImp/FullwoodHackAcademy)
+    git clone https://github.com/ttImp/FullwoodHackAcademy
     ```
 
 * Now, navigate into the new directory you just created:
