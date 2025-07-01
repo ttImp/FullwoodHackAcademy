@@ -1,4 +1,3 @@
-Of course. Here is the updated `README.md` with a new "Getting Started" section that explains how to clone the repository and run the Python script.
 # Welcome to the Fullwood Hackademy 2025!
 
 Today, we'll be learning about web application security in a hands-on ethical hacking exercise. Our goal is to understand how login forms work and how they can be tested for common vulnerabilities like weak passwords.
