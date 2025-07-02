@@ -1,6 +1,6 @@
 # Welcome to the Fullwood Hackademy 2025!
 
-Today, we'll be learning about web application security in a hands-on ethical hacking exercise. Our goal is to understand how login forms work, how they can be tested for common vulnerabilities like weak passwords, and **crucially, how to detect such attacks using web server logs in Kibana.**
+Today, we'll be learning about web application security in a hands-on ethical hacking exercise. Our goal is to understand how login forms work, how they can be tested for common vulnerabilities like weak passwords, and **crucially, how to detect such attacks using web server logs in Kibana.** We'll also explore what happens *after* a successful login and how seemingly small details, like cookies, can sometimes be manipulated if a website isn't built securely.
 
 **Golden Rule:** The skills you learn here should only **ever** be used on systems you have explicit, written permission to test. Today, we have permission to test our live target: `https://fullwoodhackademy2025.pro/`.
 
@@ -12,12 +12,12 @@ This section guides you through setting up a Python script to perform a simulate
 
 ### **Section 1.1: Setup Instructions**
 
-To begin, you need to get the necessary files onto your computer using your web browser and Python's built-in IDLE editor.
+To begin, you need to get the necessary files onto your computer. These files are part of this GitHub repository.
 
 1.  **Create a Project Folder**
     First, create a new folder on your computer to hold the project files. A good place is your Desktop. Name the folder `FullwoodHackademy`.
 
-2.  **Download the Python Script**
+2.  **Download the Python Script (`brute_force_attack.py`)**
 
     * Go to the script's page in your browser: <https://github.com/ttImp/FullwoodHackAcademy/blob/main/brute_force_attack.py>
 
@@ -31,21 +31,25 @@ To begin, you need to get the necessary files onto your computer using your web 
 
     * Go to `File > Save` and save this file as `brute_force_attack.py` inside the `FullwoodHackademy` folder you created in the first step.
 
-3.  **Download the Password File**
+3.  **Download the Password File (`mockyou.txt`)**
 
     * Inside your `FullwoodHackademy` folder, create a new subfolder and name it `data`.
 
-    * Click this link to see the password file: <https://github.com/ttImp/FullwoodHackAcademy/blob/main/data/mockyou.txt>
+    * Click this link to see the raw password file content: <https://raw.githubusercontent.com/ttImp/FullwoodHackAcademy/main/data/mockyou.txt>
+    *(This link shows the plain text content directly in your browser.)*
 
-    * In your web browser, go to `File > Save Page As...` and save the file as `mockyou.txt` inside the `data` folder you just created.
+    * **To save this file:**
+        * **Option A (Most direct):** Right-click anywhere on the page, select "Save As..." or "Save Page As...", and save the file as `mockyou.txt` inside the `data` folder you just created.
+        * **Option B (Copy/Paste):** Copy all the text from the browser page. Open a new text file in your `data` folder (e.g., using Notepad on Windows or TextEdit on Mac), paste the content, and save it as `mockyou.txt`.
 
-4.  **Download the User-Agents File**
+4.  **Download the User-Agents File (`user_agents.py`)**
 
     * This file is needed for Step 6.
 
-    * Go to this page: <https://github.com/ttImp/FullwoodHackAcademy/blob/main/user_agents.py>
+    * Go to this page to see the raw code: <https://raw.githubusercontent.com/ttImp/FullwoodHackAcademy/main/user_agents.py>
+    *(This link shows the plain text content directly in your browser.)*
 
-    * Like before, copy the raw code, open a **new file** in IDLE, paste the code, and save it as `user_agents.py` in your main `FullwoodHackademy` folder.
+    * Like before, copy all the raw code from the browser page. Open a **new file** in IDLE, paste the code, and save it as `user_agents.py` in your main `FullwoodHackademy` folder.
 
 You are now set up! You will edit and run the `brute_force_attack.py` file directly from IDLE for the rest of the exercise.
 
@@ -68,13 +72,13 @@ You will only need to edit the lines of code that start with a **single** hash (
 
 ### **Section 1.3: Our Mission (Offensive)**
 
-Our mission is to gain access to a user's account on the live website. We will start by performing reconnaissance to find a target user and then build up a Python script to "brute-force" their password, trying many combinations until we find the right one.
+Our mission is to gain access to a user's account on the live website. We will start by performing reconnaissance to find a target user and then build up a Python script to "brute-force" their password, trying many combinations until we find the right one. After gaining access, we'll see if we can trick the website into giving us more power than we should have.
 
 Let's begin!
 
-**Step 1: Reconnaissance - Finding a Target**
+**Step 1: Reconnaissance - Finding a Target and Understanding Password Complexity**
 
-Before launching an attack, we need to gather information. This is **reconnaissance**.
+Before launching an attack, we need to gather information. This is **reconnaissance**. This helps us understand what kind of users might exist and what kind of passwords the website might accept, which can make our brute-force attack more efficient.
 
 **Your Task:**
 
@@ -82,13 +86,33 @@ Before launching an attack, we need to gather information. This is **reconnaissa
 
 2.  Explore the website and find the "About Us" page.
 
-3.  We'll be targeting an employee named **Ella**. Based on the common corporate format, can you guess her email address?
+3.  We'll be targeting an example user. Based on the common corporate format, can you guess a potential email address for an employee (e.g., `firstname.lastname@example.com`)? This will be your `target_username`.
 
-4.  Try to log in using her email. Note what the website tells you when you fail.
+4.  Try to log in using this example email with a random password. Note what the website tells you when you fail.
+
+5.  **Understanding Password Complexity (In the Wild):** In a real-world scenario, you might try to sign up for a new account on the target website. Even if you don't complete the signup, the website's registration form often gives clues about password complexity requirements (e.g., "Password must be at least 8 characters long," "Must include a number and a special character"). This information is super valuable for building a smarter password list for your brute-force attack.
+
+    * **Try This:** On the live site, look for a "Sign Up" or "Register" link. Click it and try to create a new account (you don't need to finish the whole process). Pay attention to any messages the website gives you about password rules as you type. What are they? (Note: This might not work on our live target, but it's a key step in real hacking).
 
 ---
 
-**Step 2: Making a Simple GET Request**
+**Step 2: Security Through Obscurity (A Bad Idea!)**
+
+Some websites try to hide sensitive areas or pages (like an admin dashboard) by putting them in a `robots.txt` file. This file tells search engines (like Google) which pages *not* to index.
+
+But `robots.txt` is public – anyone (even a hacker) can read `robots.txt` and see what pages the website is trying to keep secret!
+
+**Lesson:** If something is sensitive, don't just hide it – you must protect it properly with things like strong passwords and access controls.
+
+**Your Task:**
+
+1.  In your web browser, go to: `https://fullwoodhackademy2025.pro/robots.txt`
+2.  Look at the `Disallow:` lines. Can you find any interesting paths that might lead to a hidden admin dashboard or a special user area?
+3.  Try to visit these paths in your browser (e.g., `https://fullwoodhackademy2025.pro/admin-dashboard`). What happens if you try to access them without logging in? (You should see an error or a login page, because you don't have credentials yet).
+
+---
+
+**Step 3: Making a Simple GET Request**
 
 Let's get our Python script to visit the login page, just like our browser did.
 
@@ -102,67 +126,96 @@ Let's get our Python script to visit the login page, just like our browser did.
 
 ---
 
-**Step 3: Sending a POST Request**
+**Step 4: Sending a POST Request**
 
 Now, let's simulate submitting the login form. A `POST` request sends data to the server.
 
 **Your Task:**
 
-1.  In the script, comment out the code from Step 2.
+1.  In the script, comment out the code from Step 3.
 
 2.  Uncomment the code block under `## -- STEP 3 --`.
 
-3.  In the `login_data` dictionary, ensure the `'email'` value is set to the target username you discovered in Step 1 (e.g., `ella@example.com`).
+3.  In the `login_data` dictionary, ensure the `'email'` value is set to the `target_username` you discovered in Step 1 (e.g., `target.user@example.com`).
 
 4.  Press `F5` to run the script. You'll see an "Invalid login" message, but you've successfully sent a login attempt!
 
 ---
 
-**Step 4: Brute-Force with a Password File**
+**Step 5: Brute-Force with a Password File**
 
-Real hackers use password lists. We have a small version called `mockyou.txt`.
-
-**Your Task:**
-
-1.  Comment out Step 3.
-
-2.  Uncomment `## -- STEP 4 --`.
-
-3.  Make sure the `username_to_try` variable is set to your target's username.
-
-4.  Press `F5` to run the script. It will now try every password from the file. This will likely fail, but it's the core of a dictionary attack.
-
----
-
-**Step 5: Appending Integers to Passwords**
-
-A common user habit is to add a number to a password. Let's make our attack smarter.
+Real hackers use password lists. We have a small version called `data/mockyou.txt`.
 
 **Your Task:**
 
 1.  Comment out Step 4.
 
-2.  Uncomment `## -- STEP 5 --`.
+2.  Uncomment `## -- STEP 4 --`.
 
-3.  This code reads each password from `mockyou.txt` and then tries appending a number to the end of it.
+3.  Make sure the `username_to_try` variable is set to your `target_username`.
 
-4.  Press `F5` to run the script. If your target is 'ella', watch closely! You should see a **Success!** message when the script discovers the correct password.
+4.  Press `F5` to run the script. It will now try every password from the file. This will likely fail, but it's the core of a dictionary attack.
 
 ---
 
-**Step 6: Hiding Our Tracks with User-Agents**
+**Step 6: Appending Integers to Passwords**
 
-To make our attack less obvious, we can change our "User-Agent" string to look like traffic from different real browsers.
+A common user habit is to add a number to a password. Let's make our attack smarter.
 
 **Your Task:**
 
 1.  Comment out Step 5.
 
+2.  Uncomment `## -- STEP 5 --`.
+
+3.  This code reads each password from `data/mockyou.txt` and then tries appending a number to the end of it.
+
+4.  Press `F5` to run the script. If your target is the example user, watch closely! You should see a **Success!** message when the script discovers the correct password.
+
+---
+
+**Step 7: Gaining User Credentials & Understanding Cookies**
+
+Now that we have the password for our example user, let's gain access and understand how websites use cookies.
+
+**Context: How a Website Uses Cookies**
+
+When you log into a website, it often gives your browser a **cookie**. A cookie is a small text file that your browser stores, and it helps the website remember who you are. Cookies are used for things like:
+* Keeping you logged in as you move between pages.
+* Remembering your preferences (like language or theme).
+* Tracking your visits to a website.
+
+The website might store a cookie that says something like `session_id=12345` (to identify your current visit) or `user_level=basic` (to tell the site you're a regular user, not an admin).
+
+**Your Task:**
+
+1.  Comment out Step 6.
 2.  Uncomment `## -- STEP 6 --`.
+3.  Replace the placeholder `discovered_password` with the correct password you just found for your target user.
+4.  Press `F5` to run the script. It will successfully log in as your target user.
+5.  **Now, open your Edge browser (or Chrome/Firefox) and go to the live site: `https://fullwoodhackademy2025.pro/`.** You should be logged in as the example user.
+6.  **Open Developer Tools:** Press `F12` (or right-click anywhere on the page and select "Inspect").
+7.  **Go to the "Application" Tab:** In the Developer Tools window, find the tab named "Application".
+8.  **Look for Cookies:** On the left-hand side, under "Storage," click on "Cookies." You'll see a list of cookies the website has given your browser.
+9.  **Find the `Admin` Cookie:** Look for a cookie named `Admin`. What value does it have?
 
-3.  Replace the placeholder `discovered_password` with the correct password you just found.
+---
 
-4.  Press `F5` to run the script and observe how the "User-Agent" changes in the output for each successful login.
+**Step 8: The Browser = Untrusted Data (Cookie Manipulation for Privilege Escalation)**
+
+Anything in your browser – like cookies, form fields, or even the JavaScript code running on the page – can be changed by the user.
+
+That means websites can't blindly trust what the browser sends back. If a website stores sensitive information (like whether you're an admin or not) directly in a cookie and doesn't double-check it on the server, it can be a security hole! This is a form of **client-side validation bypass**, where the website relies too much on what the user's browser tells it, instead of verifying everything on the server.
+
+Tools like the browser’s Developer Tools, `cURL`, or specialized hacking tools like `Burp Suite` let ethical hackers see and modify what’s being sent to and from the site.
+
+**Lesson:** Let's try and elevate our normal user to be an admin user by modifying the cookie.
+
+**Your Task:**
+
+1.  **Ian will now demonstrate how to modify the `Admin` cookie value in your Edge browser's Developer Tools (Application tab, Cookies section).**
+    * **Context:** If the `Admin` cookie is set to `0` for a regular user, what do you think setting it to `1` might do? This is a common, but very insecure, way for websites to manage user roles.
+    * **Observe:** After Ian changes the cookie value and you refresh the page, do you notice any any new features or different content on the website? Has your level of access changed?
 
 ---
 
@@ -285,7 +338,9 @@ The Discover tab shows many fields by default, but you can customize it to only 
 2.  **Locate the Fields List:** On the left side of the Discover screen, you'll see a list of available fields.
 
 3.  **Add/Remove Columns:**
+
     * To **add** a field to the main table, hover over the field name in the left list and click the **"+ Add"** button that appears.
+
     * To **remove** a field from the main table, hover over the field name in the main table's column header and click the **"Remove column"** (trash can) icon.
 
 4.  **Add these specific fields as columns to your Discover table:**
@@ -317,7 +372,7 @@ The Discover tab shows many fields by default, but you can customize it to only 
 
     * Click the **Create visualization** button.
 
-    * From the list of visualization types, select **Lens**.
+    * From the list of visualization types, select **Lens.**.
 
 3.  **Select Your Data Source:**
 
@@ -415,7 +470,7 @@ We can use Lens to create a visualization that highlights this pattern. A good w
 
 4.  **Refine and Save:**
 
-    * Adjust the time range in the top-right corner to focus on a period of activity (e.g., "Last 30 minutes" if you just ran your attack script).
+    * Adjust the time range to focus on a period of activity (e.g., "Last 30 minutes" if you just ran your attack script).
 
     * Save your visualization (e.g., "Failed Login Attempts by IP").
 

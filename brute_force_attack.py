@@ -47,7 +47,7 @@ LOGIN_URL = BASE_URL + "login.php"
 # print("\n--- [Step 3: POST Request] ---")
 
 
-# username_you_found = 'ella@example.com'
+# username_you_found = 'SomeUser'
 # password_to_try = 'testpassword'
 
 
@@ -72,7 +72,7 @@ LOGIN_URL = BASE_URL + "login.php"
 # password_file = "data/mockyou.txt"
 
 # # !!! TASK: Change 'SomeUser' to the username you chose in Step 1 !!!
-# username_to_try = "ella@example.com"
+# username_to_try = "SomeUser"
 
 # success = False
 # print(f"Starting brute-force on user '{username_to_try}' with file: {password_file}")
@@ -90,7 +90,7 @@ LOGIN_URL = BASE_URL + "login.php"
 #                 print(f"\n>>> Success! Login successful for {username_to_try} with password '{password}'")
 #                 success = True
 #                 break
-#             # time.sleep(0.5) # Be polite to the live server!
+#             # time.sleep(0.5) # Be polite to the live server! (If we need to be!)
 
 # except FileNotFoundError:
 #     print(f"Error: The password file '{password_file}' was not found.")
@@ -109,7 +109,7 @@ LOGIN_URL = BASE_URL + "login.php"
 # password_file = "data\mockyou.txt"
 
 # # !!! TASK: Change 'SomeUser' to the username you chose in Step 1 !!!
-# username_to_try = "ella@example.com"
+# username_to_try = "SomeUser"
 
 # success = False
 # print(f"Starting enhanced brute-force on '{username_to_try}' (file + appending numbers)...")
