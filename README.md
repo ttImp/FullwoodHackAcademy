@@ -92,7 +92,7 @@ Before launching an attack, we need to gather information. This is **reconnaissa
 
 5.  **Understanding Password Complexity (In the Wild):** In a real-world scenario, you might try to sign up for a new account on the target website. Even if you don't complete the signup, the website's registration form often gives clues about password complexity requirements (e.g., "Password must be at least 8 characters long," "Must include a number and a special character"). This information is super valuable for building a smarter password list for your brute-force attack.
 
-    * **Try This:** On a live site, look for a "Sign Up" or "Register" link. Click it and try to create a new account (you don't need to finish the whole process). Pay attention to any messages the website gives you about password rules as you type. What are they? (Note: This will not work on our live target, but it's a key step in real hacking).
+    * **Try This:** On the live site, look for a "Sign Up" or "Register" link. Click it and try to create a new account (you don't need to finish the whole process). Pay attention to any messages the website gives you about password rules as you type. What are they? (Note: This might not work on our live target, but it's a key step in real hacking).
 
 ---
 
@@ -215,7 +215,7 @@ Tools like the browser’s Developer Tools, `cURL`, or specialized hacking tools
 
 1.  **Ian will now demonstrate how to modify the `Admin` cookie value in your Edge browser's Developer Tools (Application tab, Cookies section).**
     * **Context:** If the `Admin` cookie is set to `0` for a regular user, what do you think setting it to `1` might do? This is a common, but very insecure, way for websites to manage user roles.
-    * **Observe:** After Ian changes the cookie value and you refresh the page, do you notice any any new features or different content on the website? Has your level of access changed?
+    * **Observe:** After Ian changes the cookie value and you refresh the page, do you notice any new features or different content on the website? Has your level of access changed?
 
 ---
 
@@ -229,7 +229,7 @@ The **Discover** tab in Kibana is your window into the raw log data. It's where 
 
 1.  **Log in to Kibana:**
     Open your web browser and navigate to your Kibana URL (e.g., `https://kibana.fullwoodhackademy2025.pro`).
-    Log in using your `student00X` username and the password you've been given.
+    Log in using your `elastic` username and the password you've set.
 
 2.  **Navigate to the Discover Tab:**
 
@@ -372,7 +372,7 @@ The Discover tab shows many fields by default, but you can customize it to only 
 
     * Click the **Create visualization** button.
 
-    * From the list of visualization types, select **Lens.**.
+    * From the list of visualization types, select **Lens**.
 
 3.  **Select Your Data Source:**
 
@@ -470,7 +470,7 @@ We can use Lens to create a visualization that highlights this pattern. A good w
 
 4.  **Refine and Save:**
 
-    * Adjust the time range to focus on a period of activity (e.g., "Last 30 minutes" if you just ran your attack script).
+    * Adjust the time range in the top-right corner to focus on a period of activity (e.g., "Last 30 minutes" if you just ran your attack script).
 
     * Save your visualization (e.g., "Failed Login Attempts by IP").
 
