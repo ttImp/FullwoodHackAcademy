@@ -229,7 +229,7 @@ The **Discover** tab in Kibana is your window into the raw log data. It's where 
 
 1.  **Log in to Kibana:**
     Open your web browser and navigate to your Kibana URL (e.g., `https://kibana.fullwoodhackademy2025.pro`).
-    Log in using your `elastic` username and the password you've set.
+    Log in using your `student00X` username and the password you've been given.
 
 2.  **Navigate to the Discover Tab:**
 
