@@ -92,7 +92,7 @@ Before launching an attack, we need to gather information. This is **reconnaissa
 
 5.  **Understanding Password Complexity (In the Wild):** In a real-world scenario, you might try to sign up for a new account on the target website. Even if you don't complete the signup, the website's registration form often gives clues about password complexity requirements (e.g., "Password must be at least 8 characters long," "Must include a number and a special character"). This information is super valuable for building a smarter password list for your brute-force attack.
 
-    * **Try This:** On the live site, look for a "Sign Up" or "Register" link. Click it and try to create a new account (you don't need to finish the whole process). Pay attention to any messages the website gives you about password rules as you type. What are they? (Note: This might not work on our live target, but it's a key step in real hacking).
+    * **Try This:** On a live site, look for a "Sign Up" or "Register" link. Click it and try to create a new account (you don't need to finish the whole process). Pay attention to any messages the website gives you about password rules as you type. What are they? (Note: This will not work on our live target, but it's a key step in real hacking).
 
 ---
 
