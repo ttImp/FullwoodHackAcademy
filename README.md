@@ -1,12 +1,16 @@
 # Welcome to the Fullwood Hackademy 2025!
 
-Today, we'll be learning about web application security in a hands-on ethical hacking exercise. Our goal is to understand how login forms work and how they can be tested for common vulnerabilities like weak passwords.
+Today, we'll be learning about web application security in a hands-on ethical hacking exercise. Our goal is to understand how login forms work, how they can be tested for common vulnerabilities like weak passwords, and **crucially, how to detect such attacks using web server logs in Kibana.**
 
 **Golden Rule:** The skills you learn here should only **ever** be used on systems you have explicit, written permission to test. Today, we have permission to test our live target: `https://fullwoodhackademy2025.pro/`.
 
 ---
 
-### **Getting Started: Setup Instructions**
+## **Part 1: Launching a Brute-Force Attack (Offensive Security)**
+
+This section guides you through setting up a Python script to perform a simulated brute-force attack.
+
+### **Section 1.1: Setup Instructions**
 
 To begin, you need to get the necessary files onto your computer using your web browser and Python's built-in IDLE editor.
 
@@ -46,7 +50,7 @@ To begin, you need to get the necessary files onto your computer using your web 
 You are now set up! You will edit and run the `brute_force_attack.py` file directly from IDLE for the rest of the exercise.
 
 ---
-### A Note on Editing and Running the Script
+### **Section 1.2: A Note on Editing and Running the Script**
 
 The Python script is divided into steps with titles that look like `## -- STEP 2 --`. **Do not** remove these `##` title lines, as they are just markers for each section.
 
@@ -62,13 +66,13 @@ You will only need to edit the lines of code that start with a **single** hash (
 
 ---
 
-## Our Mission
+### **Section 1.3: Our Mission (Offensive)**
 
 Our mission is to gain access to a user's account on the live website. We will start by performing reconnaissance to find a target user and then build up a Python script to "brute-force" their password, trying many combinations until we find the right one.
 
 Let's begin!
 
-### **Step 1: Reconnaissance - Finding a Target**
+**Step 1: Reconnaissance - Finding a Target**
 
 Before launching an attack, we need to gather information. This is **reconnaissance**.
 
@@ -84,7 +88,7 @@ Before launching an attack, we need to gather information. This is **reconnaissa
 
 ---
 
-### **Step 2: Making a Simple GET Request**
+**Step 2: Making a Simple GET Request**
 
 Let's get our Python script to visit the login page, just like our browser did.
 
@@ -98,7 +102,7 @@ Let's get our Python script to visit the login page, just like our browser did.
 
 ---
 
-### **Step 3: Sending a POST Request**
+**Step 3: Sending a POST Request**
 
 Now, let's simulate submitting the login form. A `POST` request sends data to the server.
 
@@ -114,7 +118,7 @@ Now, let's simulate submitting the login form. A `POST` request sends data to th
 
 ---
 
-### **Step 4: Brute-Force with a Password File**
+**Step 4: Brute-Force with a Password File**
 
 Real hackers use password lists. We have a small version called `mockyou.txt`.
 
@@ -130,7 +134,7 @@ Real hackers use password lists. We have a small version called `mockyou.txt`.
 
 ---
 
-### **Step 5: Appending Integers to Passwords**
+**Step 5: Appending Integers to Passwords**
 
 A common user habit is to add a number to a password. Let's make our attack smarter.
 
@@ -146,7 +150,7 @@ A common user habit is to add a number to a password. Let's make our attack smar
 
 ---
 
-### **Step 6: Hiding Our Tracks with User-Agents**
+**Step 6: Hiding Our Tracks with User-Agents**
 
 To make our attack less obvious, we can change our "User-Agent" string to look like traffic from different real browsers.
 
@@ -162,54 +166,232 @@ To make our attack less obvious, we can change our "User-Agent" string to look l
 
 ---
 
-## **Mission Accomplished!**
-
-You've completed a full ethical hacking workflow against a live target: reconnaissance, initial access attempts, and password cracking. The principles you learned today are the foundation of professional penetration testing. Always remember to act ethically and responsibly.
-
----
-
-## **Part 4: Detecting Brute-Force Attacks (Using Kibana)**
+## **Part 2: Detecting Brute-Force Attacks (Defensive Security)**
 
 Now that you understand how a brute-force attack works from the attacker's side, let's learn how to detect it using the web server logs collected in Kibana. This is what a defender (like a Security Operations Center analyst) would do.
 
-### **Concept: What is a Brute-Force Attack?**
+### **Section 2.1: Exploring Raw Log Entries in Discover**
 
-Imagine someone trying to guess a password by trying every possible combination, one after another. This is called a **brute-force attack**. On a website, this often involves repeatedly trying to log in with different usernames and passwords until one works.
-
-### **How to Detect in Logs (The Context)**
-
-In Apache access logs, a common pattern for a brute-force attack on a login page looks like this:
-
-1.  **Many `401 Unauthorized` responses:** This means the attacker is trying many incorrect username/password combinations. They are repeatedly failing to log in. The server is telling them, "You're not allowed in!"
-
-2.  **Followed by a `200 OK` or `302 Found` response:** If the attacker is successful, eventually one of their guesses will work, and the server will return a successful login code (like `200 OK` for a direct success, or `302 Found` if they are redirected to a dashboard or profile page after logging in).
-
-By looking for a large number of `401`s from the same `clientip` (the attacker's IP address) or `user_agent` (their browser/tool), specifically targeting a login page, and then seeing a successful login from that same source, you can spot a potential brute-force success.
-
-### **Building a Visualization for Brute-Force Attempts**
-
-We can use Kibana's **Lens** tool to create a visualization that highlights this pattern. A good way to start is by identifying which IP addresses are generating many failed login attempts.
+The **Discover** tab in Kibana is your window into the raw log data. It's where you can view every single log entry, search through them, and inspect all the structured pieces of information (called "fields") that Logstash has extracted.
 
 1.  **Log in to Kibana:**
-    Open your web browser and navigate to your Kibana URL (e.g., `https://kibana.fullwoodhackademy2025.pro`). Log in using your `elastic` username and the password you've set.
+    Open your web browser and navigate to your Kibana URL (e.g., `https://kibana.fullwoodhackademy2025.pro`).
+    Log in using your `elastic` username and the password you've set.
 
-2.  **Navigate to the Visualize Tab:**
+2.  **Navigate to the Discover Tab:**
+
+    * On the left-hand side navigation bar, click on the **Discover** icon (it looks like a compass or magnifying glass).
+
+3.  **Select the Correct Index Pattern:**
+
+    * In the top-left corner of the Discover page, you'll see a dropdown menu that says "Index pattern".
+
+    * Click on this dropdown and select `filebeat-*`. This tells Kibana to show you all the logs collected by Filebeat from your Apache server.
+
+4.  **Adjust the Time Range:**
+
+    * In the top-right corner of the screen, you'll see a time range selector (e.g., "Last 15 minutes").
+
+    * Click on this and choose a relevant time range where you know you've generated some Apache traffic (e.g., "Last 1 hour" or "Last 24 hours"). This will update the displayed logs.
+
+5.  **Inspect Log Entries:**
+
+    * You should now see a list of individual log entries. Each row represents a single event that happened on your Apache web server.
+
+    * Click on any log entry in the main table to expand it. This will show you the raw `message` field (the original log line) and all the structured fields that Logstash has parsed.
+
+### **Understanding Your Apache Log Fields**
+
+When Logstash processes your Apache logs, it breaks down each raw log line into many smaller, meaningful pieces of information called "fields." Here's what some of the most important ones mean:
+
+* **`virtual_host`**: This tells you the website (Virtual Host) that the request was made to. For example, `fullwoodhackademy2025.pro`.
+
+* **`server_port`**: The port on the server that received the request (e.g., `80` for HTTP, `443` for HTTPS). This is useful for knowing if the original request was secure or not.
+
+* **`clientip`**: The IP address of the client (the visitor's computer) that made the request. This is super important for identifying who is accessing your server.
+
+* **`ident`**: (Identity) and **`auth`**: (Authenticated User) - These fields are often `-` (a dash) unless you have specific Apache modules configured for user identification or authentication.
+
+* **`@timestamp`**: This is the exact date and time (in UTC) when the event happened on the server. Kibana uses this field to organize events on a timeline.
+
+* **`verb`**: The HTTP method used for the request, like `GET` (asking for a page), `POST` (submitting form data), `PUT`, `DELETE`, etc.
+
+* **`request`**: The specific path or resource that was requested on your website (e.g., `/index.html`, `/login.php`, `/images/logo.png`).
+
+* **`httpversion`**: The version of the HTTP protocol used (e.g., `1.1`).
+
+* **`response`**: The HTTP status code returned by the server. This is a crucial field!
+
+    * `200 OK`: Everything worked fine.
+
+    * `301 Moved Permanently`: The page has permanently moved to a new address (often used for HTTP to HTTPS redirects).
+
+    * `401 Unauthorized`: The client tried to access something that requires authentication, but failed (e.g., wrong username/password).
+
+    * `403 Forbidden`: The client is not allowed to access this resource.
+
+    * `404 Not Found`: The requested page or resource doesn't exist.
+
+    * `500 Internal Server Error`: Something went wrong on the server's side.
+
+* **`bytes`**: The size of the response sent back to the client, in bytes.
+
+* **`response_time_us`**: The time it took for the server to process the request and send a response, in microseconds. This helps you find slow pages.
+
+* **`referrer`**: The URL of the page that linked to the requested page. Useful for understanding traffic sources.
+
+* **`http.user_agent`**: The raw, full string that identifies the client's browser, operating system, and sometimes device (e.g., `Mozilla/5.0 (Windows NT 10.0; Win64; x64) ... Chrome/137.0.0.0 Safari/537.36`).
+
+* **`user_agent` (as an object)**: This is a structured breakdown of the `http.user_agent` string, provided by Logstash's `useragent` filter. It contains sub-fields like:
+
+    * `user_agent.name`: The browser name (e.g., "Chrome", "Firefox").
+
+    * `user_agent.os.name`: The operating system name (e.g., "Windows", "macOS").
+
+    * `user_agent.device.name`: The type of device (e.g., "Other", "Tablet", "Mobile").
+
+* **`ssl_protocol`**: The SSL/TLS protocol used for the connection (e.g., `TLSv1.2`, `TLSv1.3`). This only appears for HTTPS (port 443) requests.
+
+* **`ssl_cipher`**: The encryption cipher suite used for the SSL/TLS connection. This also only appears for HTTPS requests.
+
+* **`ssl_session_id`**: A unique ID for the SSL/TLS session. This also only appears for HTTPS requests.
+
+### **Exercise 1: Finding Specific Log Entries**
+
+1.  In the Discover tab, use the search bar at the top to find specific types of logs.
+
+2.  Try searching for:
+
+    * `response:404` (to see all "Not Found" errors).
+
+    * `clientip: "YOUR_OWN_IP_ADDRESS"` (replace with your computer's public IP to see your own activity).
+
+    * `request: "/login.php"` (to see all requests to your login page).
+
+    * `user_agent.os.name: "Windows"` (to see requests from Windows computers).
+
+    * Combine them: `response:401 AND request: "/admin"` (to find unauthorized attempts on admin pages).
+
+---
+
+### **Section 2.2: Customizing Your Discover View**
+
+The Discover tab shows many fields by default, but you can customize it to only display the most relevant information for your investigation. This makes it easier to spot patterns quickly.
+
+**How it should look:** [https://kibana.fullwoodhackademy2025.pro/app/discover#/view/391e2a12-b02a-41f2-9e2a-766777be856c?_g=()](https://kibana.fullwoodhackademy2025.pro/app/discover#/view/391e2a12-b02a-41f2-9e2a-766777be856c?_g=())
+
+1.  **Go to the Discover Tab:** (If you're not already there).
+
+2.  **Locate the Fields List:** On the left side of the Discover screen, you'll see a list of available fields.
+
+3.  **Add/Remove Columns:**
+    * To **add** a field to the main table, hover over the field name in the left list and click the **"+ Add"** button that appears.
+    * To **remove** a field from the main table, hover over the field name in the main table's column header and click the **"Remove column"** (trash can) icon.
+
+4.  **Add these specific fields as columns to your Discover table:**
+
+    * `@timestamp`
+    * `event.dataset`
+    * `virtual_host`
+    * `verb`
+    * `request`
+    * `response`
+    * `clientip`
+    * `geoip.geo.region_name`
+    * `user_agent.name`
+    * `response_time_us`
+
+    Arrange them in an order that makes sense to you by dragging the column headers. This customized view will help you focus on the most important details for security analysis.
+
+---
+
+### **Section 2.3: Creating a Lens Visualization for Response Codes**
+
+**Lens** is a powerful and easy-to-use visualization tool in Kibana that lets you drag and drop fields to create charts. We'll use it to visualize how HTTP response codes are changing over time.
+
+1.  **Navigate to the Visualize Tab:**
 
     * On the left-hand side navigation bar, click on the **Visualize** icon (it looks like a bar chart).
 
-3.  **Create a New Visualization:**
+2.  **Create a New Visualization:**
 
     * Click the **Create visualization** button.
 
     * From the list of visualization types, select **Lens**.
 
-    * Choose your `filebeat-*` index pattern as the data source.
+3.  **Select Your Data Source:**
 
-4.  **Build the Visualization for Brute-Force:**
+    * In the "Select a data source" prompt, choose your `filebeat-*` index pattern.
+
+4.  **Build the Visualization:**
 
     * **Step 1: Choose a Chart Type**
 
-        * On the right-hand side, under "Chart type", select **Vertical bar** or **Table**. A **Table** is often very good for this specific task because it clearly lists IPs and their counts.
+        * On the right-hand side, under "Chart type", select **Vertical bar**. This is good for showing counts over time.
+
+    * **Step 2: Define the Y-axis (What to Count)**
+
+        * Drag the **`Count of records`** field from the "Fields" list on the left and drop it onto the **`Y-axis`** area (or click the "Add" button next to "Count of records" under "Suggestions"). This will show the number of log entries.
+
+    * **Step 3: Define the X-axis (Time Component)**
+
+        * Drag the **`@timestamp`** field from the "Fields" list on the left and drop it onto the **`X-axis`** area.
+
+        * Lens will automatically create a "Date histogram" for you (e.g., showing counts per minute or per hour).
+
+    * **Step 4: Break Down by Response Code (Color)**
+
+        * Drag the **`response`** field from the "Fields" list on the left and drop it onto the **`Break down by`** area.
+
+        * Lens will automatically create different colored bars for each unique HTTP response code (e.g., 200, 301, 404, 500).
+
+5.  **Refine and Customize (Optional):**
+
+    * **Time Range:** Adjust the time range in the top-right corner to see data for different periods.
+
+    * **Labels:** You can click on the axis labels (e.g., "Count of records", "response") to rename them for clarity.
+
+    * **Sort Order:** You can adjust how the response codes are sorted if needed.
+
+6.  **Save Your Visualization:**
+
+    * In the top-right corner, click the **Save** button.
+
+    * Give your visualization a meaningful name (e.g., "Apache Response Codes Over Time").
+
+    * Click **Save**.
+
+### **Exercise 2: Modifying Your Response Code Visualization**
+
+1.  Open your "Apache Response Codes Over Time" visualization in Lens.
+
+2.  Change the chart type from "Vertical bar" to **"Area"** or **"Line"**. How does it change your view of the data?
+
+3.  Instead of `response` for "Break down by", try dragging `verb` (HTTP method) to "Break down by". What does this visualization tell you about your website traffic?
+
+---
+
+### **Section 2.4: Building a Visualization for Brute-Force Attempts**
+
+We can use Lens to create a visualization that highlights this pattern. A good way to start is by identifying which IP addresses are generating many failed login attempts.
+
+1.  **Navigate to the Visualize Tab:**
+
+    * Click on the **Visualize** icon.
+
+2.  **Create a New Visualization:**
+
+    * Click the **Create visualization** button.
+
+    * Select **Lens**.
+
+    * Choose your `filebeat-*` index pattern as the data source.
+
+3.  **Build the Visualization for Brute-Force:**
+
+    * **Step 1: Choose a Chart Type**
+
+        * On the right-hand side, select **Vertical bar** or **Table**. A **Table** is often very good for this specific task because it clearly lists IPs and their counts.
 
     * **Step 2: Define the Rows (Client IP)**
 
@@ -231,7 +413,7 @@ We can use Kibana's **Lens** tool to create a visualization that highlights this
 
         * Drag the **`response`** field from the "Fields" list and drop it onto the **`Columns`** area (if using a Table) or **`Break down by`** (if using a Vertical bar chart). This will show the counts of different response codes (e.g., 401, 200, 302) for each IP.
 
-5.  **Refine and Save:**
+4.  **Refine and Save:**
 
     * Adjust the time range in the top-right corner to focus on a period of activity (e.g., "Last 30 minutes" if you just ran your attack script).
 
