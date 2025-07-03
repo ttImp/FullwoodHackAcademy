@@ -92,8 +92,6 @@ Before launching an attack, we need to gather information. This is **reconnaissa
 
 5.  **Understanding Password Complexity (In the Wild):** In a real-world scenario, you might try to sign up for a new account on the target website. Even if you don't complete the signup, the website's registration form often gives clues about password complexity requirements (e.g., "Password must be at least 8 characters long," "Must include a number and a special character"). This information is super valuable for building a smarter password list for your brute-force attack.
 
-    * **Try This:** On the live site, look for a "Sign Up" or "Register" link. Click it and try to create a new account (you don't need to finish the whole process). Pay attention to any messages the website gives you about password rules as you type. What are they? (Note: This might not work on our live target, but it's a key step in real hacking).
-
 ---
 
 **Step 2: Security Through Obscurity (A Bad Idea!)**
@@ -213,9 +211,9 @@ Tools like the browser’s Developer Tools, `cURL`, or specialized hacking tools
 
 **Your Task:**
 
-1.  **Ian will now demonstrate how to modify the `Admin` cookie value in your Edge browser's Developer Tools (Application tab, Cookies section).**
+1.  **We will now demonstrate how to modify the `Admin` cookie value in your Edge browser's Developer Tools (Application tab, Cookies section).**
     * **Context:** If the `Admin` cookie is set to `0` for a regular user, what do you think setting it to `1` might do? This is a common, but very insecure, way for websites to manage user roles.
-    * **Observe:** After Ian changes the cookie value and you refresh the page, do you notice any new features or different content on the website? Has your level of access changed?
+    * **Observe:** After we make changes the cookie value and you refresh the page, do you notice any new features or different content on the website? Has your level of access changed? What hidden pages you've discovered may be available to only admin level users?
 
 ---
 
@@ -228,8 +226,8 @@ Now that you understand how a brute-force attack works from the attacker's side,
 The **Discover** tab in Kibana is your window into the raw log data. It's where you can view every single log entry, search through them, and inspect all the structured pieces of information (called "fields") that Logstash has extracted.
 
 1.  **Log in to Kibana:**
-    Open your web browser and navigate to your Kibana URL (e.g., `https://kibana.fullwoodhackademy2025.pro`).
-    Log in using your `elastic` username and the password you've set.
+    Open your web browser and navigate to your Kibana URL  [https://kibana.fullwoodhackademy2025.pro](https://kibana.fullwoodhackademy2025.pro)
+    Log in using your **student00x** username and the password **$3cur1ty**.
 
 2.  **Navigate to the Discover Tab:**
 
@@ -275,7 +273,7 @@ When Logstash processes your Apache logs, it breaks down each raw log line into 
 
 * **`response`**: The HTTP status code returned by the server. This is a crucial field!
 
-    * `200 OK`: Everything worked fine.
+    * `200/201 OK`: Everything worked fine.
 
     * `301 Moved Permanently`: The page has permanently moved to a new address (often used for HTTP to HTTPS redirects).
 
@@ -386,11 +384,11 @@ The Discover tab shows many fields by default, but you can customize it to only 
 
     * **Step 2: Define the Y-axis (What to Count)**
 
-        * Drag the **`Count of records`** field from the "Fields" list on the left and drop it onto the **`Y-axis`** area (or click the "Add" button next to "Count of records" under "Suggestions"). This will show the number of log entries.
+        * Drag the **`Count of records`** field from the "Fields" list on the left and drop it onto the **`Y-axis (vertical)`** area (or click the "Add" button next to "Count of records" under "Suggestions"). This will show the number of log entries.
 
     * **Step 3: Define the X-axis (Time Component)**
 
-        * Drag the **`@timestamp`** field from the "Fields" list on the left and drop it onto the **`X-axis`** area.
+        * Drag the **`@timestamp`** field from the "Fields" list on the left and drop it onto the **`X-axis (horizontal)`** area.
 
         * Lens will automatically create a "Date histogram" for you (e.g., showing counts per minute or per hour).
 
